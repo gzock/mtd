@@ -1,0 +1,212 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="col-md-12">
+	<div ng-show="message">
+  	<alert class="text-center" type="danger" close="closeAlert($index)">{{message}}</alert>
+	</div>
+<div class="container">
+	<div class="row">
+		<h1>対象項目一覧</h1>
+		<hr>
+		<ol class="breadcrumb">
+			<li ng-repeat="hist in locationHistory">
+				<a href="#">{{hist.name}}</a>
+			</li>
+			<li>
+				<a href="#">{{hereLocation.name}}</a>
+			</li>
+		</ol>
+
+		<hr>
+	
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="col-md-8 col-xs-2" >
+					<button type="button" class="btn btn-info" ng-click="prevLocation()" ng-class="{disabled: locationHistory.length == 0}">
+						<span class="glyphicon glyphicon-arrow-left"></span>
+					</button>
+				</div>
+				<div class="col-md-2 col-xs-6">
+					<form class="input-group input-group-sm" ng-submit="getTgt(work.getPj(), searchStr)">
+						<input type="text" class="form-control input-sm"
+							placeholder="検索文字列"
+							ng-model="searchStr"
+						/>
+						<span class="input-group-btn">
+							<button type="submit" class="btn btn-default">
+								<span class=" glyphicon glyphicon-search"></span>
+							</button>
+						</span>
+					</form>
+				</div>
+				<div class="col-md-2 col-xs-4">
+					<button type="button" class="btn btn-info" ng-click="goHome()">
+						<span class="glyphicon glyphicon-home"></span>
+					</button>
+					<button type="button" class="btn btn-success" ng-click="refreshLocation()">
+						<span class="glyphicon glyphicon-refresh"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<table class="table table-hover">
+			<tr>
+				<th></th>
+				<th>名称</th>
+				<th>施工前進捗率</th>
+				<th>施工後進捗率</th>
+				<th></th>
+			</tr>
+			<tr ng-repeat="location in locations" ng-class="{success: selectedTgt._id === location._id}" ng-click="selectTgt(location)" ng-dblclick="nextLocation(location)">
+				<td>
+					<span class="glyphicon glyphicon-ok"
+						ng-show="selectedTgt._id === location._id">
+					</span>
+				</td>
+				<td>{{location.name}}</td>
+				<td>{{Math.round(location.photo.bfr.shot / location.photo.bfr.total * 100) || 0}}%</td>
+				<td>{{Math.round(location.photo.aft.shot / location.photo.aft.total * 100) || 0}}%</td>
+				<td ng-click="nextLocation(location)"><span class="glyphicon glyphicon-chevron-right"></span></td>
+			</tr>
+		</table>
+		
+		<hr>
+	
+		<div ng-show="targets.length > 0">
+			<table class="table table-hover">
+				<tr>
+					<td></td>
+					<th>名称</th>
+					<th>施工前</th>
+					<th>施工後</th>
+				</tr>
+				<tr ng-repeat="target in targets" ng-class="{success: selectedTgt._id === target._id}" ng-click="selectTgt(target)">
+					<td>
+						<span class="glyphicon glyphicon-ok"
+							ng-show="selectedTgt._id === target._id">
+						</span>
+					</td>
+					<td>{{target.name}}</td>
+					<td><span class="badge">{{target.photo.bfr.shot}}</span></td>
+					<td><span class="badge">{{target.photo.aft.shot}}</span></td>
+				</tr>
+			</table>
+		</div>
+
+	</div>
+</div>
+
+<footer class="footer">
+
+  <div class="container">
+		<h2>選択項目 : {{selectedTgt.name}}</h2>
+		<small>各種操作を選択して下さい</small>
+		<div class="btn-toolbar" role="toolbar" aria-label="...">
+		  <div class="btn-group btn btn-default btn-lg" role="group" aria-label="..." ng-click="chgFlg('add')">
+				<span class="glyphicon glyphicon-plus"></span>
+			</div>
+		  <div class="btn-group btn btn-default btn-lg" role="group" aria-label="..." ng-show="selectedTgt" ng-click="chgFlg('edit')">
+				<span class="glyphicon glyphicon-edit"></span>
+			</div>
+		  <div class="btn-group btn btn-default btn-lg" role="group" aria-label="..." ng-show="selectedTgt" ng-click="chgFlg('del')">
+				<span class="glyphicon glyphicon-remove"></span>
+			</div>
+		  <div class="btn-group btn btn-default btn-lg" role="group" aria-label="..." ng-show="selectedTgt && selectedTgt.type == 1" ng-click="chgFlg('camera')">
+				<span class="glyphicon glyphicon-camera"></span>
+			</div>
+		  <div class="btn-group btn btn-default btn-lg" role="group" aria-label="..." ng-show="selectedTgt && selectedTgt.type == 1" ng-click="showPhoto()">
+				<span class="glyphicon glyphicon-picture"></span>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="row">
+			<div ng-if="alertMsg">
+  			<alert class="text-center" type="{{alertMsg.type}}" close="closeAlert($index)">{{alertMsg.msg}}</alert>
+			</div>
+
+			<div ng-show="addShowFlg">
+				<div>
+					<dl class="dl-horizontal">
+					  <dt><h4>種類</h4></dt>
+					  <dd>
+							<div class="btn-group">
+								<label class="btn btn-primary" ng-model="type" btn-radio="'0'">場所</label>
+								<label class="btn btn-primary" ng-model="type" btn-radio="'1'">撮影対象</label>
+							</div>
+						</dd>
+					</dl>
+				</div>
+				<div>
+					<form class="has-success input-group input-group-lg">
+						<label class="input-group-addon">
+							<span class="glyphicon glyphicon-plus"></span>
+						</label>
+						<input type="text" class="form-control input-lg" ng-model="addTgtName" requierd>
+						<span class="input-group-btn del-btn">
+							<button class="btn btn-success" ng-click="addTgt()">追加</button>
+						</span>
+					</form>
+				</div>
+			</div>
+
+
+			<div ng-show="editShowFlg">
+				<form class="has-warning input-group input-group-lg">
+					<label class="input-group-addon">
+						<span class="glyphicon glyphicon-edit"></span>
+					</label>
+					<input type="text" class="form-control input-lg" ng-model="editTgtName" placeholder="{{selectedTgt.name}}" required>
+					<span class="input-group-btn del-btn">
+						<button class="btn btn-warning" ng-click="editTgt()">編集</button>
+					</span>
+				</form>
+			</div>
+
+
+			<div ng-show="delShowFlg">
+				<form class="has-error input-group input-group-lg">
+					<label class="input-group-addon">
+						<span class="glyphicon glyphicon-remove"></span>
+					</label>
+					<p class="form-control input-lg">{{selectedTgt.name}}</p>
+					<span class="input-group-btn del-btn">
+						<button class="btn btn-danger" ng-click="deleteTgt()">削除</button>
+					</span>
+				</form>
+			</div>
+
+			<div ng-if="cameraShowFlg">
+				<div>
+					<dl class="dl-horizontal">
+					  <dt><h4>種類</h4></dt>
+					  <dd>
+							<div class="btn-group">
+								<!-- 本来はng-modelだけで良いと思うのだが、
+											どうもng-modelで変数に値が代入されるよりも先に、ng-clickの処理のほうが先に進められるらしい
+											そのため、ng-clickの中でng-modelと同じことをしてあげることで、これを回避
+											本当にAngularJSの仕様としてこれで正しいのかどうかは、あとで確認しよう
+								-->
+								<label class="btn btn-primary" ng-model="photoType" btn-radio="'0'" ng-click="setPostPrep(0); shotShowFlg = !shotShowFlg">施工前</label>
+								<label class="btn btn-primary" ng-model="photoType" btn-radio="'1'" ng-click="setPostPrep(1); shotShowFlg = !shotShowFlg">施工後</label>
+							</div>
+						</dd>
+					</dl>
+				</div>
+				<div ng-if="cameraShowFlg && shotShowFlg">
+<!--					<input type="file" file-model="uploadFile">
+					<button ng-click="testClick()">upload</button> -->
+				  <div class="fileUploader" role="group" aria-label="..." >
+						<button type="button" class="btn btn-success btn-block">  撮影  </button>
+						<input type="file"class="uploader" accept="image/*;capture=camera" file-model="uploadFile"/>
+					</div>
+				</div>
+			</div>
+
+		</div>
+  </div>
+</footer>
+
+

@@ -1,0 +1,33 @@
+.panel-body {
+	padding-top: 5px;
+	padding-right: 1px;
+	padding-left: 1px;
+	padding-bottom: 5px;
+}
+
+.col-xs-4 {
+	padding-right: 1px;
+	padding-left: 1px;
+}
+
+/* 参考 http://lab.sonicmoov.com/development/javascript/input-type-file/ */
+
+.fileUploader{
+		position:relative;
+		/*↓幅はデザイン依存。場合によっては、指定しなくていい*/
+		/* width:315px; */
+}
+
+.btn-toolbar .btn-group {float:initial;}
+
+.fileUploader .uploader{
+		position:absolute;
+		top:0;
+		right:0;
+		/*↓念のため*/
+		z-index:99;
+		width:100%;
+		height:100%;
+		opacity:0;
+}
+

@@ -1,0 +1,56 @@
+<div class="modal-header">
+	
+	<div class="col-xs-6">
+		<button type="button" class="btn btn-block" ng-class="{'btn-primary': type == 0}" ng-click="chgType(0); searchAdoptPhoto()">
+			施行前
+		</button>
+	</div>
+	<div class="col-xs-6">
+		<button type="button" class="btn btn-block" ng-class="{'btn-primary': type == 1}" ng-click="chgType(1); searchAdoptPhoto()">
+			施行後
+		</button>
+	</div>
+	<hr>
+</div>
+
+
+<div class="modal-body">
+	<div ng-repeat="url in urls">
+		<div ng-if="$index == stepCnt" class="center-block">
+			<img ng-src="{{url}}" alt="...">
+		</div>
+	</div>
+</div>
+
+<div class="modal-footer">
+	<div ng-hide="names.length == 0">
+		<div ng-hide="isAdopt">
+			<button type="button" class="btn btn-success btn-block" ng-click="adoptPhoto()">
+				<strong>この写真を採用</strong>
+			</button>
+		</div>
+		<div ng-show="isAdopt">
+			<button type="button" class="btn btn-info btn-block" disabled>
+				<strong>現在この写真が採用されています</strong>
+			</button>
+		</div>
+		<hr>
+	</div>
+
+		<div class="col-xs-4">
+			<button type="button" class="btn btn-default pull-left" ng-hide="stepCnt == 0" ng-click="prevPhoto()">
+				前へ
+			</button>
+		</div>
+		<div class="col-xs-4">
+			<button type="button" class="btn btn-default center-block" ng-click="closeModal()">
+				閉じる
+			</button>
+		</div>
+		<div class="col-xs-4">
+			<button type="button" class="btn btn-primary pull-right" ng-hide="names.length == 0 || stepCnt == names.length - 1" ng-click="nextPhoto()">
+				次へ		
+			</button>
+		</div>
+
+</div>

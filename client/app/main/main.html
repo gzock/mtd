@@ -1,0 +1,52 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<header class="hero-unit" id="banner">
+  <div class="container">
+    <h1>MTD</h1>
+  </div>
+</header>
+
+
+
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12">
+			<h1>ログイン</h1>
+			<hr>
+		  <form class="form-horizontal" name="form" ng-submit="login(form)" novalidate>
+
+		    <div class="form-group">
+					<label class="col-sm-2 control-label">Email</label>
+					<div class="col-sm-10">
+		      	<input type="email" name="email" class="form-control" placeholder="Email Address" ng-model="user.email" required>
+		    	</div>
+				</div>
+		
+		    <div class="form-group">
+					<label class="col-sm-2 control-label">Password</label>
+					<div class="col-sm-10">
+		      	<input type="password" name="password" class="form-control" placeholder="Password" ng-model="user.password" required>
+		    	</div>
+				</div>
+		
+		    <div class="form-group has-error">
+		      <p class="help-block" ng-show="form.email.$error.required && form.password.$error.required && submitted">
+		         Please enter your email and password.
+		      </p>
+		      <p class="help-block" ng-show="form.email.$error.email && submitted">
+		         Please enter a valid email.
+		      </p>
+		
+		      <p class="help-block">{{ errors.other }}</p>
+		    </div>
+		
+		    <div>
+		      <button class="btn btn-success btn-block btn-login" type="submit">
+		        <strong>ログイン<strong>
+		      </button>
+		    </div>
+
+		  </form>
+		</div>
+	</div>
+</div>

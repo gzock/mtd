@@ -1,0 +1,107 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="col-md-12">
+	<div class="container">
+		<div class="row">
+			<h1>案件一覧</h1>
+			<hr>
+		  <ul class="list-unstyled">
+			  <li class="todo-item" ng-repeat="project in projects" ng-class="{'has-success': selectPjName === project.name}" >
+					<form class="input-group input-group-lg">
+					<label class="input-group-addon">
+						<span class="glyphicon glyphicon-ok" ng-show="selectPjName === project.name"></span>
+					</label>
+					<p class="form-control input-lg todo-title" ng-click="selectPj(project)">{{project.name}}</p>
+					<span class="input-group-btn del-btn">
+						<button type="reset"
+						class="btn btn-danger" ng-click="deletePj(project)">削除</button>
+					</span>
+					</form>
+				</li>
+			</ul>
+			<hr>
+
+			<div ng-if="alertMsg">
+  			<alert class="text-center" type="{{alertMsg.type}}" close="closeAlert($index)">{{alertMsg.msg}}</alert>
+			</div>
+
+			<form class="has-success input-group input-group-lg">
+				<label class="input-group-addon">
+					<span class="glyphicon glyphicon-plus"></span>
+				</label>
+				<input type="text" class="form-control input-lg"  ng-model="createPjName" requierd>
+				<span class="input-group-btn del-btn">
+					<button class="btn btn-success" ng-click="createPj()">追加</button>
+				</span>
+			</form>
+
+			<hr>
+			
+			<div class="col-md-12">
+				<h1 ng-click="isCollapsed = !isCollapsed">
+				一括登録
+					<span class="btn btn-sm glyphicon glyphicon-chevron-down"></span>
+				</h1>
+				<div class="col-md-6" collapse="isCollapsed">
+					<h4> Example - list.csv </h4>
+					<pre class="prettyprint linenums">
+キャンパス1
+	1号館
+		部屋1
+			*AP
+		*AP2
+	2号館
+		*SW
+	3号館
+		PC教室
+			*PC
+			*PC2
+			*PC3
+キャンパス2
+	A号館
+		*hoge
+		foo
+			*bar
+	B号館
+	C号館
+					</pre>
+				</div>
+				<div class="col-md-6" collapse="isCollapsed">
+					<br><br>
+					<h3>一括登録用ファイル記述ルール</h3>
+					<ul>
+						<li>上から順番に階層構造になるように記述</li>
+						<li>先頭から<kbd>tab</kbd>を階層分記述</li>
+						<li>(Exampleの場合、1号館の前には<kbd>tab</kbd>が1つ、APの前には3つ存在している)</li>
+						<li>「場所」ではなく、「撮影対象」の場合、先頭に<kbd>*(アスタリスク)</kbd>を付ける</li>
+						<li>要注意 : ファイルは必ず文字コード<kbd>UTF-8</kbd>で保存すること
+					</ul>
+					<hr>
+					<h3>一括登録手順</h3>
+					<ol>
+						<li>Exampleを参考に、一括登録用テキストファイルを用意する</li>
+						<li>任意の名前でプロジェクトを作成し、選択状態にする</li>
+						<li>下部の一括登録からファイルをアップロード</li>
+					</ol>
+					<div class="text-center" ng-if="selectedPj">
+					  <div class="fileUploader" role="group" aria-label="...">
+							<button type="button" class="btn btn-default btn-block">
+								<span class="glyphicon glyphicon-cloud-upload"></span>　
+								一括登録
+							</button>
+							<input type="file"class="uploader" file-model="uploadFile"/>
+						</div>
+
+						<div ng-if="alertMsg2">
+  						<alert class="text-center" type="{{alertMsg2.type}}" close="closeAlert($index)">{{alertMsg2.msg}}</alert>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+
+
+		</div>
+	</div>
+</div>

@@ -1,0 +1,83 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+	<div ng-show="message">
+  	<alert class="text-center" type="danger" close="closeAlert($index)">{{message}}</alert>
+	</div>
+	<div class="row" ng-hide="message">
+		<h1>採用写真まとめzip生成</h1>
+		<hr>
+		
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="text-center">
+					<div class="col-sm-4">
+						<h3>zip生成</h3>
+					</div>
+					<div class="col-sm-4">
+						<h3>{{progressMsg}}</h3>
+					</div>
+					<div class="col-sm-4">
+						<h3>{{downloadTitle}}</h3>
+					</div>
+					<br><br><br>
+					<div class="col-sm-4">
+						<a class="btn btn-lg btn-success" ng-click="generate()">
+							<span class="glyph-lg glyphicon glyphicon-file"></span>
+						</a>
+					</div>
+					<div class="col-sm-4">
+						<span class="glyph-lg glyphicon"
+							ng-class="{'load': progress, 'glyphicon-refresh': !url && progress, 'glyphicon-ok': url}"></span>
+					</div>
+					<div class="col-sm-4">
+						<a class="btn btn-lg btn-info" ng-show="url" ng-href="{{url}}" download="{{fileName}}">
+							<span class="glyph-lg glyphicon glyphicon-cloud-download"></span>
+						</a>
+					</div>
+					<br><br><br>
+					<div class="col-sm-4">
+					</div>
+					<div class="col-sm-4">
+					</div>
+					<div class="col-sm-4">
+						{{fileSize}}
+						<br>
+						{{fileName}}
+					</div>
+					<br><br><br>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<h1 ng-click="isCollapsed = !isCollapsed">採用写真一覧
+				<span class="btn btn-sm glyphicon glyphicon-chevron-down"></span>
+			</h1>
+			<div collapse="isCollapsed">
+				<div class="col-xs-6" ng-repeat="item in items">
+					<table class="report table table-borderd">
+						<tbody>
+							<tr>
+								<td class="text-center" rowspan="3">
+									<span class="photo" style="background-image: url('{{item.src}}')">
+									</span>
+								</td>
+								<td class="cell">施工前後</td>
+								<td class="cell">{{item.bfrAft ? '施工後' : '施工前'}}</td>
+							</tr>
+							<tr>
+								<td >場所</td>
+								<td >{{item.name}}</td>
+							</tr>
+							<tr>
+								<td >作業内容</td>
+								<td ></td>
+							</tr>
+						</tbody>
+					</table>
+					</div>
+				</div>
+			</div>
+
+	</div>
+</div>
