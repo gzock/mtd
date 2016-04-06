@@ -1,9 +1,9 @@
 var fs = require('fs');
 var async = require('async');
 var archiver = require('archiver');
-var family = require('/home/gzock/workspace/mtd/server/api/target/family-seacher.js');
-var ZIP_PATH = '/home/gzock/workspace/mtd/zip/';
-var PHOTO_PATH = '/home/gzock/workspace/mtd/photos/';
+var family = require('../target/family-seacher.js');
+var ZIP_PATH = '../../../zip/';
+var PHOTO_PATH = '../../..//photos/';
 
 function generate(pj, cb) {
 	var genZip = ZIP_PATH + pj.name + '_' + pj._id + '.zip';

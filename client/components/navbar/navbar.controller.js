@@ -3,16 +3,16 @@
 angular.module('mtdApp')
   .controller('NavbarCtrl', function ($scope, $location, Auth) {
     $scope.menu = [{
-      'title': 'Top',
+      'title': 'トップ',
       'link': '/'
     },{
-			'title': 'Projects',
+			'title': '案件一覧',
 			'link': '/projects'
 		},{
-			'title': 'Targets',
+			'title': '撮影対象項目',
 			'link': '/targets'
 		},{
-			'title': 'Generate',
+			'title': '図書生成',
 			'link': '/generate'
 		}];
 
