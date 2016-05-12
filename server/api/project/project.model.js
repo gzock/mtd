@@ -14,8 +14,8 @@ var ProjectSchema = new Schema({
 					{end: Date}
 				],
 	progress: {type: Number, default: 0},
-	complete: Boolean,
-  active: Boolean
+	complete: {type: Boolean, default: false},
+  active: {type: Boolean, default: true}
 });
 
 module.exports = mongoose.model('Project', ProjectSchema);

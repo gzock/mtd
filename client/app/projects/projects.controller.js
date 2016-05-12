@@ -13,6 +13,7 @@ angular.module('mtdApp')
 		$scope.isCollapsed = true;
     
     $scope.getCurrentUser = Auth.getCurrentUser;
+		$scope.hideCompFlg = true;
 
 		(function(){
 	    $('pre').addClass('prettyprint');
@@ -49,7 +50,14 @@ angular.module('mtdApp')
 		};
 
 		$scope.deletePj = function(pj) {
-			$http.delete('api/projects/' + pj._id).success(function() {
+			$http.delete('/api/projects/' + pj._id).success(function() {
+				getPj();
+			});
+		};
+
+		$scope.switchCompPj = function(pj) {
+			pj.complete = !pj.complete;
+			$http.put('/api/projects/' + pj._id, pj ).success(function() {
 				getPj();
 			});
 		};

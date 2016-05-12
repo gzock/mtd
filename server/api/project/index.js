@@ -27,7 +27,7 @@ router.get('/', auth.hasRole('admin'), controller.index);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', auth.isAuthenticated(), controller.create);
 router.post('/:id/batch', auth.isAuthenticated(), upload.single('file'),controller.batchCreate);
-router.put('/:id', controller.update);
+router.put('/:id', auth.isAuthenticated(), controller.update);
 router.patch('/:id', controller.update);
 router.delete('/:id', auth.isAuthenticated(), controller.destroy);
 

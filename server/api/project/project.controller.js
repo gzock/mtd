@@ -96,7 +96,7 @@ exports.create = function(req, res) {
 // Updates an existing project in the DB.
 exports.update = function(req, res) {
   if(req.body._id) { delete req.body._id; }
-  Project.findById(req.params.id, function (err, project) {
+  Project.findOne( {'users': {$in: [req.user._id]}, _id: req.params.id}, function (err, project) {
     if (err) { return handleError(res, err); }
     if(!project) { return res.send(404); }
     var updated = _.merge(project, req.body);
