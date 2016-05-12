@@ -19,19 +19,19 @@ mongoose.connect(config.mongo.uri, config.mongo.options);
 if(config.seedDB) { require('./config/seed'); }
 
 // Setup SSL Options
-var sslOptions = {
-	//key: fs.readFileSync('./certs/privkey.pem'),
-	key: fs.readFileSync('/home/gzock/workspace/mtd/server/certs/privkey.pem'),
-	cert: fs.readFileSync('/home/gzock/workspace/mtd/server/certs/cert.pem'),
-	ca: fs.readFileSync('/home/gzock/workspace/mtd/server/certs/chain.pem'),
-	//requestCert: true,
-	//rejectUnauthorized: false
-};
+//var sslOptions = {
+//	//key: fs.readFileSync('./certs/privkey.pem'),
+//	key: fs.readFileSync('/home/gzock/workspace/mtd/server/certs/privkey.pem'),
+//	cert: fs.readFileSync('/home/gzock/workspace/mtd/server/certs/cert.pem'),
+//	ca: fs.readFileSync('/home/gzock/workspace/mtd/server/certs/chain.pem'),
+//	//requestCert: true,
+//	//rejectUnauthorized: false
+//};
 
 // Setup server
 var app = express();
-//var server = require('http').createServer(app, sslOptions);
-var server = require('https').createServer(sslOptions, app);
+var server = require('http').createServer(app);
+//var server = require('https').createServer(sslOptions, app);
 var socketio = require('socket.io')(server, {
   serveClient: (config.env === 'production') ? false : true,
   path: '/socket.io-client'

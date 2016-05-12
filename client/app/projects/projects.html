@@ -26,15 +26,16 @@
 						<span class="glyphicon glyphicon-ok" ng-show="selectPjName === project.name"></span>
 					</label>
 					<p class="form-control input-lg todo-title" ng-click="selectPj(project)">{{project.name}}</p>
-					<span class="input-group-btn info-btn">
+					<span class="input-group-addon">進捗率 {{project.progress}}%</span>
+					<span class="input-group-btn info-btn" ng-show="selectPjName === project.name">
 						<button type="reset"
 						class="btn btn-default" ng-click="infoPj(project)">詳細</button>
 					</span>
-					<span class="input-group-btn comp-btn">
+					<span class="input-group-btn comp-btn" ng-show="selectPjName === project.name">
 						<button type="reset"
 						class="btn btn-info" ng-click="completePj(project)">完了</button>
 					</span>
-					<span class="input-group-btn del-btn">
+					<span class="input-group-btn del-btn" ng-show="selectPjName === project.name">
 						<button type="reset"
 						class="btn btn-danger" ng-click="deletePj(project)">削除</button>
 					</span>
