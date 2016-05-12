@@ -10,6 +10,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 var express = require('express');
 var mongoose = require('mongoose');
 var config = require('./config/environment');
+var fs = require('fs');
 
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
@@ -17,9 +18,20 @@ mongoose.connect(config.mongo.uri, config.mongo.options);
 // Populate DB with sample data
 if(config.seedDB) { require('./config/seed'); }
 
+// Setup SSL Options
+var sslOptions = {
+	//key: fs.readFileSync('./certs/privkey.pem'),
+	key: fs.readFileSync('/home/gzock/workspace/mtd/server/certs/privkey.pem'),
+	cert: fs.readFileSync('/home/gzock/workspace/mtd/server/certs/cert.pem'),
+	ca: fs.readFileSync('/home/gzock/workspace/mtd/server/certs/chain.pem'),
+	//requestCert: true,
+	//rejectUnauthorized: false
+};
+
 // Setup server
 var app = express();
-var server = require('http').createServer(app);
+//var server = require('http').createServer(app, sslOptions);
+var server = require('https').createServer(sslOptions, app);
 var socketio = require('socket.io')(server, {
   serveClient: (config.env === 'production') ? false : true,
   path: '/socket.io-client'

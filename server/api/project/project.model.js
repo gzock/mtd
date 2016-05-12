@@ -13,6 +13,7 @@ var ProjectSchema = new Schema({
 					{start: {type: Date, default: Date.now}},
 					{end: Date}
 				],
+	progress: {type: Number, default: 0},
 	complete: Boolean,
   active: Boolean
 });

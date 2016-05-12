@@ -30,6 +30,7 @@ angular.module('mtdApp')
 		$scope.selectPj = function(pj) {
 			$scope.selectPjName = pj.name;
 			$scope.selectedPj = pj;
+			console.log($scope.selectedPj);
 			work.setPj(pj);
 		};
 

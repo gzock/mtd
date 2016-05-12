@@ -50,48 +50,64 @@
 			</div>
 		</div>
 
-		<table class="table table-hover">
-			<tr>
-				<th></th>
-				<th>名称</th>
-				<th>施工前進捗率</th>
-				<th>施工後進捗率</th>
-				<th></th>
-			</tr>
-			<tr ng-repeat="location in locations" ng-class="{success: selectedTgt._id === location._id}" ng-click="selectTgt(location)" ng-dblclick="nextLocation(location)">
-				<td>
-					<span class="glyphicon glyphicon-ok"
-						ng-show="selectedTgt._id === location._id">
-					</span>
-				</td>
-				<td>{{location.name}}</td>
-				<td>{{Math.round(location.photo.bfr.shot / location.photo.bfr.total * 100) || 0}}%</td>
-				<td>{{Math.round(location.photo.aft.shot / location.photo.aft.total * 100) || 0}}%</td>
-				<td ng-click="nextLocation(location)"><span class="glyphicon glyphicon-chevron-right"></span></td>
-			</tr>
-		</table>
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th></th>
+							<th>名称</th>
+							<th>施工前進捗率</th>
+							<th>施工後進捗率</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="location in locations" ng-class="{success: selectedTgt._id === location._id}" ng-click="selectTgt(location)" ng-dblclick="nextLocation(location)">
+							<td>
+								<span class="glyphicon glyphicon-ok"
+									ng-show="selectedTgt._id === location._id">
+								</span>
+							</td>
+							<td>{{location.name}}</td>
+							<td>{{Math.round(location.photo.bfr.shot / location.photo.bfr.total * 100) || 0}}%</td>
+							<td>{{Math.round(location.photo.aft.shot / location.photo.aft.total * 100) || 0}}%</td>
+							<td ng-click="nextLocation(location)"><span class="glyphicon glyphicon-chevron-right"></span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 		
 		<hr>
 	
 		<div ng-show="targets.length > 0">
-			<table class="table table-hover">
-				<tr>
-					<td></td>
-					<th>名称</th>
-					<th>施工前</th>
-					<th>施工後</th>
-				</tr>
-				<tr ng-repeat="target in targets" ng-class="{success: selectedTgt._id === target._id}" ng-click="selectTgt(target)">
-					<td>
-						<span class="glyphicon glyphicon-ok"
-							ng-show="selectedTgt._id === target._id">
-						</span>
-					</td>
-					<td>{{target.name}}</td>
-					<td><span class="badge">{{target.photo.bfr.shot}}</span></td>
-					<td><span class="badge">{{target.photo.aft.shot}}</span></td>
-				</tr>
-			</table>
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<td></td>
+								<th>名称</th>
+								<th>施工前</th>
+								<th>施工後</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="target in targets" ng-class="{success: selectedTgt._id === target._id}" ng-click="selectTgt(target)">
+								<td>
+									<span class="glyphicon glyphicon-ok"
+										ng-show="selectedTgt._id === target._id">
+									</span>
+								</td>
+								<td>{{target.name}}</td>
+								<td><span class="badge">{{target.photo.bfr.shot}}</span></td>
+								<td><span class="badge">{{target.photo.aft.shot}}</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</div>
 
 	</div>

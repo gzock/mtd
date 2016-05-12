@@ -2,7 +2,9 @@
 
 var _ = require('lodash');
 var Project = require('./project.model');
+var Target = require('../target/target.model');
 
+var async = require('async');
 var expressJwt = require('express-jwt');
 var jwt = require('jsonwebtoken');
 var config = require('../../config/environment');
@@ -13,10 +15,29 @@ var CSV_PATH = '/home/gzock/workspace/mtd/csv/';
 // Get list of projects
 exports.index = function(req, res) {
 
-	//Project.find({}).remove(function() {});
+	////Project.find({}).remove(function() {});
+  //Project.find(function (err, projects) {
+  //  if(err) { return handleError(res, err); }
+  //  return res.json(200, projects);
+  //  //return res.json(200, [{"name":"d"}, {"name":"e"}]);
+  //});
+
   Project.find(function (err, projects) {
     if(err) { return handleError(res, err); }
-    return res.json(200, projects);
+
+		for(var i = 0; i < projects.length; i++) {
+	  	Target.find({pj_id: projects[i]._id, parent: projects[i].p_id}, function (err, target) {
+	  	  if(err) { return handleError(res, err); }
+	  	  if(!target) { return res.send(404); }
+	  	  
+				for (var j = 0; j < target.length; j++) {
+					bfr = (target[j].photo.bfr.shot / target[j].photo.bfr.total) * 100;
+					aft = (target[j].photo.aft.shot / target[j].photo.aft.total) * 100;
+					projects[i].progress = (bfr + aft) / 2;
+				}
+    		return res.json(200, projects);
+	  	});
+		}
     //return res.json(200, [{"name":"d"}, {"name":"e"}]);
   });
 };
@@ -26,11 +47,42 @@ exports.show = function(req, res) {
 
 	if(req.user._id != req.params.id) { return res.send(204); }
 
-  Project.find({'users': {$in: [req.params.id]}}, function (err, project) {
+//  Project.find({'users': {$in: [req.params.id]}}, function (err, project) {
+//    if(err) { return handleError(res, err); }
+//    if(!project) { return res.send(404); }
+//    return res.json(project);
+//  });
+  Project.find({'users': {$in: [req.params.id]}}, function (err, projects) {
     if(err) { return handleError(res, err); }
-    if(!project) { return res.send(404); }
-    return res.json(project);
+    if(!projects) { return res.send(404); }
+		async.forEach(projects, function(pj, forDone) {
+	  	Target.find({pj_id: pj._id, parent: pj._id}, function (err, target) {
+	  	  if(err) { return forDone(err); }
+	  	  if(!target) { return forDone("not found"); }
+					var bfrShot = 0;
+					var aftShot = 0;
+					var bfrTotal = 0;
+					var aftTotal = 0;
+	  	  
+				for (var j = 0; j < target.length; j++) {
+					bfrShot += target[j].photo.bfr.shot;
+					aftShot += target[j].photo.aft.shot;
+					bfrTotal += target[j].photo.bfr.total;
+					aftTotal += target[j].photo.aft.total;
+				}
+				var bfr = (bfrShot / bfrTotal) * 100;
+				var aft = (aftShot / aftTotal) * 100;
+				pj += { progress: (bfr + aft) / 2};
+				console.log((bfr + aft) / 2);
+				return forDone(err);
+	  	});
+
+		}, function(err) {
+			if(err) { return handleError(res, err); }
+			return res.json(200, projects);
+		});
   });
+
 };
 
 // Creates a new project in the DB.
