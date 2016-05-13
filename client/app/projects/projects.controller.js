@@ -28,6 +28,8 @@ angular.module('mtdApp')
 		};
 		getPj();
 
+		$scope.refreshPj = function() { getPj(); }
+
 		$scope.selectPj = function(pj) {
 			$scope.selectPjName = pj.name;
 			$scope.selectedPj = pj;

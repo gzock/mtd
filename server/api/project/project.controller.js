@@ -65,15 +65,22 @@ exports.show = function(req, res) {
 					var aftTotal = 0;
 	  	  
 				for (var j = 0; j < target.length; j++) {
-					bfrShot += target[j].photo.bfr.shot;
-					aftShot += target[j].photo.aft.shot;
-					bfrTotal += target[j].photo.bfr.total;
-					aftTotal += target[j].photo.aft.total;
+					if(target[j].type) {
+						bfrTotal++;
+						aftTotal++;
+						if(target[j].photo.bfr.shot > 0) { bfrShot += target[j].photo.bfr.shot; }
+						if(target[j].photo.aft.shot > 0) { aftShot += target[j].photo.aft.shot; }
+
+					} else {
+						bfrShot += target[j].photo.bfr.shot;
+						aftShot += target[j].photo.aft.shot;
+						bfrTotal += target[j].photo.bfr.total;
+						aftTotal += target[j].photo.aft.total;
+					}
 				}
 				var bfr = (bfrShot / bfrTotal) * 100;
 				var aft = (aftShot / aftTotal) * 100;
-				pj += { progress: (bfr + aft) / 2};
-				console.log((bfr + aft) / 2);
+				pj.progress = (bfr + aft) / 2;
 				return forDone(err);
 	  	});
 

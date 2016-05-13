@@ -12,7 +12,7 @@
 						<button type="button" class="btn" ng-click="hideCompFlg = !hideCompFlg" ng-class="{'btn-info': !hideCompFlg, 'btn-default': hideCompFlg}" >
 							<span class="glyphicon glyphicon-eye-close" ng-class="{'glyphicon-eye-open': !hideCompFlg, 'glyphicon-eye-close': hideCompFlg}"></span>
 						</button>
-						<button type="button" class="btn btn-success" ng-click="getPj()">
+						<button type="button" class="btn btn-success" ng-click="refreshPj()">
 							<span class="glyphicon glyphicon-refresh"></span>
 						</button>
 					</div>
@@ -26,7 +26,7 @@
 						<span class="glyphicon glyphicon-ok" ng-show="selectPjName === project.name"></span>
 					</label>
 					<p class="form-control input-lg todo-title" ng-click="selectPj(project)">{{project.name}}</p>
-					<span class="input-group-addon">進捗率 {{project.progress}}%</span>
+					<span class="input-group-addon">進捗率{{('00' + project.progress).slice(-3)}}%</span>
 					<span class="input-group-btn comp-btn" ng-show="selectPjName === project.name && !project.complete">
 						<button type="reset"
 						class="btn btn-info" ng-click="switchCompPj(project)">完了</button>
