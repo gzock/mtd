@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('mtdApp')
-  .controller('TargetsCtrl', function ($scope, $http, $window, $modal, $location, $timeout, work) {
+  .controller('TargetsCtrl', function ($scope, $http, $window, $modal, $location, $timeout, work, confirm) {
     $scope.message = '';
 		$scope.alertMsg = '';
 		var pj = null;
@@ -28,6 +28,8 @@ angular.module('mtdApp')
 		$scope.hereLocation = {};
 		$scope.hereLocation = work.getPj();
 		$scope.locationHistory = [];
+
+		$scope.typeFlag = true;
 
 
 		$scope.Math = $window.Math;
@@ -111,7 +113,7 @@ angular.module('mtdApp')
 
 		$scope.getTgt = function(tgt, str) {
 			$scope.alertMsg = '';
-			$scope.selectedTgt = {};
+			$scope.selectedTgt = '';
 			if(pj) {
 				var url = '/api/targets/' + work.getPj()._id;
 				var filterFlg = false;
@@ -208,12 +210,16 @@ angular.module('mtdApp')
 		};
 
 		$scope.deleteTgt = function() {
-			$http.delete('/api/targets/' + work.getPj()._id + "/" + $scope.selectedTgt._id).success(function() {
-				$scope.getTgt($scope.hereLocation);	
-				setAlertMsg('success', $scope.selectedTgt.name + 'を削除しました');
-			}).error(function(err) {
-				setAlertMsg('danger', err);
-			});
+			confirm.showConfirm("選択項目\"" + $scope.selectedTgt.name + "\"を削除してもよろしいですか？",
+				function() {
+					$http.delete('/api/targets/' + work.getPj()._id + "/" + $scope.selectedTgt._id).success(function() {
+						$scope.getTgt($scope.hereLocation);	
+						setAlertMsg('success', $scope.selectedTgt.name + 'を削除しました');
+					}).error(function(err) {
+						setAlertMsg('danger', err);
+					});
+				}
+			);
 		};
 
 		$scope.chgFileName = function($file, $event, $flow) {
@@ -249,4 +255,5 @@ angular.module('mtdApp')
 													msg: msg
 												};
 		};
+
   });

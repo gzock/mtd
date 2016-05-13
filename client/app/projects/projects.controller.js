@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('mtdApp')
-  .controller('ProjectsCtrl', function ($scope, $http, $cookieStore, User,  Auth, work) {
+  .controller('ProjectsCtrl', function ($scope, $http, $cookieStore, User,  Auth, work, confirm) {
     $scope.message = 'Hello';
 		$scope.alertMsg = null;
 		$scope.alertMsg2 = null;
@@ -52,16 +52,28 @@ angular.module('mtdApp')
 		};
 
 		$scope.deletePj = function(pj) {
-			$http.delete('/api/projects/' + pj._id).success(function() {
-				getPj();
-			});
+			confirm.showConfirm("プロジェクト\"" + $scope.selectedPj.name + "\"を削除してもよろしいですか？", 
+				function() {
+					alert(1);
+				}
+			);
 		};
 
 		$scope.switchCompPj = function(pj) {
-			pj.complete = !pj.complete;
-			$http.put('/api/projects/' + pj._id, pj ).success(function() {
-				getPj();
-			});
+			if(pj.complete) {
+				var msg = "プロジェクト\"" + $scope.selectedPj.name + "\"を未完了状態に移行してもよろしいですか？";
+			} else {
+				var msg = "プロジェクト\"" + $scope.selectedPj.name + "\"を完了状態に移行してもよろしいですか？";
+			}
+
+			confirm.showConfirm(msg,
+				function() {
+					pj.complete = !pj.complete;
+					$http.put('/api/projects/' + pj._id, pj ).success(function() {
+						getPj();
+					});
+				}
+			);
 		};
 
 		$scope.batchAdd = function() {
