@@ -29,7 +29,8 @@ angular.module('mtdApp')
 		$scope.hereLocation = work.getPj();
 		$scope.locationHistory = [];
 
-		$scope.typeFlag = true;
+		$scope.typeFlg = true;
+		$scope.photoTypeFlg = 3;
 
 
 		$scope.Math = $window.Math;
@@ -108,7 +109,7 @@ angular.module('mtdApp')
 					$scope.newFlg = true;
 				}
 			}
-			return;
+			$scope.shotShowFlg = true;
 		};
 
 		$scope.getTgt = function(tgt, str) {
@@ -212,9 +213,10 @@ angular.module('mtdApp')
 		$scope.deleteTgt = function() {
 			confirm.showConfirm("選択項目\"" + $scope.selectedTgt.name + "\"を削除してもよろしいですか？",
 				function() {
+					var name = $scope.selectedTgt.name;
 					$http.delete('/api/targets/' + work.getPj()._id + "/" + $scope.selectedTgt._id).success(function() {
 						$scope.getTgt($scope.hereLocation);	
-						setAlertMsg('success', $scope.selectedTgt.name + 'を削除しました');
+						setAlertMsg('success', name + 'を削除しました');
 					}).error(function(err) {
 						setAlertMsg('danger', err);
 					});

@@ -80,7 +80,7 @@ exports.show = function(req, res) {
 				}
 				var bfr = (bfrShot / bfrTotal) * 100;
 				var aft = (aftShot / aftTotal) * 100;
-				pj.progress = (bfr + aft) / 2;
+				pj.progress = Math.round((bfr + aft) / 2);
 				return forDone(err);
 	  	});
 

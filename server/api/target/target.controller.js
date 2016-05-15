@@ -170,22 +170,26 @@ exports.destroy = function(req, res) {
 							});
 					},
 					function(done) {
-						family.getChildren(target._id, function(datas){
-							console.log("*** Finish ***");
+						if(!target.type) {
+							family.getChildren(target._id, function(datas){
+								console.log("*** Finish ***");
 	
-							if(datas) {
-								async.forEach(datas, function(data, forDone) {
-									console.log("Delete is " + data._id);
-									data.remove(function(err) {
-										return forDone(err);
+								if(datas) {
+									async.forEach(datas, function(data, forDone) {
+										console.log("Delete is " + data._id);
+										data.remove(function(err) {
+											return forDone(err);
+										});
+									}, function(err) {
+										return done(err);
 									});
-								}, function(err) {
-									return done(err);
-								});
-							} else {
-								done("Children's Not Found.");
-							};
-						});
+								} else {
+									done("Children's Not Found.");
+								};
+							});
+						} else {
+							done();
+						}
 								
 					}], function(err) {
 			      if(err) { return handleError(res, err); }

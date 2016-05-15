@@ -141,21 +141,22 @@
 		<div class="row">
 			<div ng-if="alertMsg">
   			<alert class="text-center" type="{{alertMsg.type}}" close="closeAlert($index)">{{alertMsg.msg}}</alert>
+				<hr>
 			</div>
 
 				<div class="col-xs-12" ng-show="addShowFlg">
 					<div class="col-xs-6">
-						<button type="button" class="btn btn-block" ng-model="type" btn-radio="'0'" ng-class="{'btn-primary': typeFlag}" ng-click="typeFlag = !typeFlag">
+						<button type="button" class="btn btn-block" ng-model="type" btn-radio="'0'" ng-class="{'btn-primary': typeFlg}" ng-click="typeFlg = !typeFlg">
 							場所	
 						</button>
 					</div>
 					<div class="col-xs-6">
-						<button type="button" class="btn btn-block" ng-model="type" btn-radio="'1'" ng-class="{'btn-primary': !typeFlag}" ng-click="typeFlag = !typeFlag">
+						<button type="button" class="btn btn-block" ng-model="type" btn-radio="'1'" ng-class="{'btn-primary': !typeFlg}" ng-click="typeFlg = !typeFlg">
 							撮影対象
 						</button>
 					</div>
 				</div>
-				<hr>
+
 				<div class="col-xs-12" ng-show="addShowFlg">
 					<form class="has-success input-group input-group-lg">
 						<label class="input-group-addon">
@@ -193,30 +194,40 @@
 				</form>
 			</div>
 
-			<div ng-if="cameraShowFlg">
-				<div>
-					<dl class="dl-horizontal">
-					  <dt><h4>種類</h4></dt>
-					  <dd>
-							<div class="btn-group">
+					
 								<!-- 本来はng-modelだけで良いと思うのだが、
 											どうもng-modelで変数に値が代入されるよりも先に、ng-clickの処理のほうが先に進められるらしい
 											そのため、ng-clickの中でng-modelと同じことをしてあげることで、これを回避
 											本当にAngularJSの仕様としてこれで正しいのかどうかは、あとで確認しよう
 								-->
-								<label class="btn btn-primary" ng-model="photoType" btn-radio="'0'" ng-click="setPostPrep(0); shotShowFlg = !shotShowFlg">施工前</label>
-								<label class="btn btn-primary" ng-model="photoType" btn-radio="'1'" ng-click="setPostPrep(1); shotShowFlg = !shotShowFlg">施工後</label>
-							</div>
-						</dd>
-					</dl>
+		<div ng-if="cameraShowFlg">
+				<div class="col-xs-6">
+					<button type="button" class="btn btn-block" 
+							ng-model="photoType" 
+							btn-radio="'0'" 
+							ng-class="{'btn-primary': photoTypeFlg == 0}" 
+							ng-click="photoTypeFlg = 0; setPostPrep(0);" >
+						施工前
+					</button>
 				</div>
-				<div ng-if="cameraShowFlg && shotShowFlg">
+				<div class="col-xs-6">
+					<button type="button" class="btn btn-block" 
+							ng-model="photoType" 
+							btn-radio="'1'" 
+							ng-class="{'btn-primary': photoTypeFlg == 1}" 
+							ng-click="photoTypeFlg = 1; setPostPrep(1);" >
+						施工後
+					</button>
+				</div>
+			</div>
+			<hr>
+
+			<div ng-if="shotShowFlg">
 <!--					<input type="file" file-model="uploadFile">
 					<button ng-click="testClick()">upload</button> -->
-				  <div class="fileUploader" role="group" aria-label="..." >
-						<button type="button" class="btn btn-success btn-block">  撮影  </button>
-						<input type="file"class="uploader" accept="image/*;capture=camera" file-model="uploadFile"/>
-					</div>
+			  <div class="fileUploader" role="group" aria-label="..." >
+					<button type="button" class="btn btn-success btn-block">  撮影  </button>
+					<input type="file"class="uploader" accept="image/*;capture=camera" file-model="uploadFile"/>
 				</div>
 			</div>
 
