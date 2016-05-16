@@ -7,7 +7,8 @@ var mongoose = require('mongoose'),
 
 var ProjectSchema = new Schema({
 //  name: String,
-	users: [{type:String}],
+	//users: [{type:String}],
+	users: [{type: Schema.Types.ObjectId}],
 	name: String,
 	date: [
 					{start: {type: Date, default: Date.now}},
