@@ -6,9 +6,9 @@ function hasProject(token_id, p_id, cb) {
 	Project.findById(p_id, function(err, project) {
 		if(err) { return cb(err); }
 		if(!project) { return cb(err); }
-
-		for(var i in project.users) {
-			if(token_id == project.users[i]) { 
+		for(var i = 0; i < project.users.length; i++) {
+			if(token_id == String(project.users[i])) { 
+				console.log("hogehoge");
 				return cb(null, true);
 			}
 		}
