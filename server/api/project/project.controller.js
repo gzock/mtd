@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var Project = require('./project.model');
 var Target = require('../target/target.model');
+var authz = require('../target/authz-checker.js');
 
 var async = require('async');
 var expressJwt = require('express-jwt');
@@ -47,11 +48,6 @@ exports.show = function(req, res) {
 
 	if(req.user._id != req.params.id) { return res.send(204); }
 
-//  Project.find({'users': {$in: [req.params.id]}}, function (err, project) {
-//    if(err) { return handleError(res, err); }
-//    if(!project) { return res.send(404); }
-//    return res.json(project);
-//  });
   Project.find({'users': {$in: [req.params.id]}}, function (err, projects) {
     if(err) { return handleError(res, err); }
     if(!projects) { return res.send(404); }
@@ -102,50 +98,47 @@ exports.create = function(req, res) {
 
 // Updates an existing project in the DB.
 exports.update = function(req, res) {
-  if(req.body._id) { delete req.body._id; }
-  Project.findOne( {'users': {$in: [req.user._id]}, _id: req.params.id}, function (err, project) {
-    if (err) { return handleError(res, err); }
-    if(!project) { return res.send(404); }
-    var updated = _.merge(project, req.body);
-    updated.save(function (err) {
-      if (err) { return handleError(res, err); }
-      return res.json(200, project);
-    });
+	authz.isOwner(req.user._id,  req.params.id, function(err, flag) {
+	  if(err || !flag) { return handleError(res, err); }
+
+  	if(req.body._id) { delete req.body._id; }
+  	Project.findOne( {'users': {$in: [req.user._id]}, _id: req.params.id}, function (err, project) {
+  	  if (err) { return handleError(res, err); }
+  	  if(!project) { return res.send(404); }
+  	  var updated = _.merge(project, req.body);
+  	  updated.save(function (err) {
+  	    if (err) { return handleError(res, err); }
+  	    return res.json(200, project);
+  	  });
+  	});
   });
 };
 
 // Deletes a project from the DB.
 exports.destroy = function(req, res) {
 
-	Project.findById(req.params.id, function (err, project) {
-		var ownerFlag = false;
-		for(var i in project.users) {
-			if(req.user._id == project.users[i]) { ownerFlag = true; break; }
-		}
+	authz.isOwner(req.user._id,  req.params.id, function(err, flag) {
+	  if(err || !flag) { return handleError(res, err); }
+		Project.findById(req.params.id, function (err, project) {
+  	  if(err) { return handleError(res, err); }
+  	 	if(!project) { return res.send(404); }
 
-    if(err) { return handleError(res, err); }
+		 	// target -> projectで同期的にいくようにしたほうが良い
+		 	family.getChildren(project._id, function(err, datas) {
+  	  		if(err) { return handleError(res, err); }
+		 		datas.forEach(function(data) {
+		 			data.remove(function(err) {
+		 				if(err) { return handleError(res, err); }
+		 			});
+		 		});
+		 	});
 
-		if(ownerFlag) {
-    	if(!project) { return res.send(404); }
-
-			// target -> projectで同期的にいくようにしたほうが良い
-			family.getChildren(project._id, function(err, datas) {
-     		if(err) { return handleError(res, err); }
-				datas.forEach(function(data) {
-					data.remove(function(err) {
-						if(err) { return handleError(res, err); }
-					});
-				});
-			});
-
-   		project.remove(function(err) {
-     		if(err) { return handleError(res, err); }
-    	 	return res.send(200, {});
-   		});
-		} else {
-			return res.send(204);
-		}
-  });
+  		project.remove(function(err) {
+  	 		if(err) { return handleError(res, err); }
+  	  	return res.send(200, {});
+  		});
+  	});
+	});
 };
 
 exports.batchCreate = function(req, res) {

@@ -13,7 +13,8 @@ angular.module('mtdApp')
 		$scope.isCollapsed = true;
     
     $scope.getCurrentUser = Auth.getCurrentUser;
-		$scope.hideCompFlg = true;
+		$scope.hideCompFlg = false;
+		$scope.hideOtherPjFlg = false;
 
 		(function(){
 	    $('pre').addClass('prettyprint');
@@ -38,7 +39,9 @@ angular.module('mtdApp')
 		};
 
 		$scope.createPj = function() {
-			$http.post('/api/projects', { users:[$scope.getCurrentUser()._id],
+			$http.post('/api/projects', { 
+																		owner: [$scope.getCurrentUser()._id],
+																		users: [$scope.getCurrentUser()._id],
 																		name: $scope.createPjName
 																	}).
 				success(function(data, status, headers, config) {
@@ -105,5 +108,17 @@ angular.module('mtdApp')
 			}).error(function(err) {
 				$scope.alertMsg2 = {type: 'danger', msg: '失敗 : ' + err};
 			});
+		};
+
+		$scope.isOwner = function(item) {
+				return item.owner == $scope.getCurrentUser()._id ? item : null;
+		};
+
+		$scope.isOwnerFilter = function(item) {
+			if($scope.hideOtherPjFlg) {
+				return $scope.isOwner(item);
+			} else {
+				return item;
+			}
 		};
   });

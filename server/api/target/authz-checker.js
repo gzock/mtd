@@ -2,13 +2,23 @@ var Target = require('./target.model.js');
 var Project = require('./../project/project.model.js');
 var Target = require('./../target/target.model.js');
 
+function isOwner(token_id, p_id, cb) {
+	Project.findById(p_id, function(err, project) {
+		if(err) { return cb(err); }
+		if(!project) { return cb(err); }
+		if(token_id == String(project.owner)) { 
+			return cb(null, true);
+		}
+		return cb(null, false);
+	});
+};
+
 function hasProject(token_id, p_id, cb) {
 	Project.findById(p_id, function(err, project) {
 		if(err) { return cb(err); }
 		if(!project) { return cb(err); }
 		for(var i = 0; i < project.users.length; i++) {
 			if(token_id == String(project.users[i])) { 
-				console.log("hogehoge");
 				return cb(null, true);
 			}
 		}
@@ -37,6 +47,7 @@ function hasPhoto(token_id, filename, cb) {
 	});
 };
 
+exports.isOwner = isOwner;
 exports.hasProject = hasProject;
 exports.hasTarget = hasTarget;
 exports.hasPhoto = hasPhoto;

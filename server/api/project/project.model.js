@@ -6,8 +6,7 @@ var mongoose = require('mongoose'),
 		//mongoose.connect('mongodb://localhost/mtd-dev');
 
 var ProjectSchema = new Schema({
-//  name: String,
-	//users: [{type:String}],
+	owner: {type: Schema.Types.ObjectId},
 	users: [{type: Schema.Types.ObjectId}],
 	name: String,
 	date: [
