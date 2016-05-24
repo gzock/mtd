@@ -239,6 +239,7 @@ exports.createPhoto = function(req, res) {
 	var loopFlg = true;
 	var shotType = '';
 	var shotName = '';
+	var adoptName = '';
 
 	authz.hasTarget(req.user._id, req.params.id, function(err, flag) {
 	  if(err || !flag) { return handleError(res, err); }
@@ -253,10 +254,12 @@ exports.createPhoto = function(req, res) {
 			if(req.params.photoType == 0) {
 				shotType = { "photo.bfr.shot": 1};
 				shotName = { "photo.bfr.names": req.file.filename};
+				adoptName = { "photo.bfr.adopt": req.file.filename};
 
 			} else if(req.params.photoType == 1){
 				shotType = { "photo.aft.shot": 1};
 				shotName = { "photo.aft.names": req.file.filename};
+				adoptName = { "photo.aft.adopt": req.file.filename};
 			} else {
 				return handleError(res, err);
 			}
@@ -269,7 +272,8 @@ exports.createPhoto = function(req, res) {
 			Target.findOneAndUpdate(query, 
 															{ 
 																$inc: shotType,
-																$push: shotName
+																$push: shotName,
+																$set: adoptName
 															}, 
 															function(err, dbRes) {
 				if (err) { return handleError(res, err); }
