@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('mtdApp')
-  .controller('ProjectsCtrl', function ($scope, $http, $cookieStore, User, Auth, work, confirm) {
+  .controller('ProjectsCtrl', function ($scope, $http, $cookieStore, $location, User, Auth, work, confirm) {
     $scope.message = 'Hello';
 		$scope.alertMsg = null;
 		$scope.alertMsg2 = null;
@@ -16,6 +16,7 @@ angular.module('mtdApp')
     $scope.isLoggedIn = Auth.isLoggedIn;
 		$scope.hideCompFlg = false;
 		$scope.hideOtherPjFlg = false;
+		$scope.autoRedirect = true;
 
 		(function(){
 	    $('pre').addClass('prettyprint');
@@ -41,8 +42,10 @@ angular.module('mtdApp')
 		$scope.selectPj = function(pj) {
 			$scope.selectPjName = pj.name;
 			$scope.selectedPj = pj;
-			console.log($scope.selectedPj);
 			work.setPj(pj);
+			if($scope.autoRedirect) {
+				$location.path('/targets');
+			}
 		};
 
 		$scope.createPj = function() {
