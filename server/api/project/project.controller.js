@@ -46,7 +46,7 @@ exports.index = function(req, res) {
 // Get a single project
 exports.show = function(req, res) {
 
-	if(req.user._id != req.params.id) { return res.send(204); }
+	if(req.user._id != req.params.id) { return res.send(403); }
 
   Project.find({'users': {$in: [req.params.id]}}, function (err, projects) {
     if(err) { return handleError(res, err); }

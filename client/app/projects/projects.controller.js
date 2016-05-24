@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('mtdApp')
-  .controller('ProjectsCtrl', function ($scope, $http, $cookieStore, User,  Auth, work, confirm) {
+  .controller('ProjectsCtrl', function ($scope, $http, $cookieStore, User, Auth, work, confirm) {
     $scope.message = 'Hello';
 		$scope.alertMsg = null;
 		$scope.alertMsg2 = null;
@@ -13,6 +13,7 @@ angular.module('mtdApp')
 		$scope.isCollapsed = true;
     
     $scope.getCurrentUser = Auth.getCurrentUser;
+    $scope.isLoggedIn = Auth.isLoggedIn;
 		$scope.hideCompFlg = false;
 		$scope.hideOtherPjFlg = false;
 
@@ -22,14 +23,20 @@ angular.module('mtdApp')
 		})();
 
 		// 美しくない。。。書き直したい
-		function getPj() {
-			$http.get('/api/projects/' + $scope.getCurrentUser()._id).success(function(res) {
-				$scope.projects = res;
-   		});
-		};
-		getPj();
+		$scope.getPj = function() {
 
-		$scope.refreshPj = function() { getPj(); }
+			$http.get('/api/projects/' + Auth.getCurrentUser()._id)
+			.success(function(res) {
+					$scope.projects = res;
+   		})
+			.error(function() { 
+				$scope.getPj();
+			});
+		};
+
+		$scope.getPj();
+
+		$scope.refreshPj = function() { $scope.getPj(); }
 
 		$scope.selectPj = function(pj) {
 			$scope.selectPjName = pj.name;
@@ -46,7 +53,7 @@ angular.module('mtdApp')
 																	}).
 				success(function(data, status, headers, config) {
 					//$scope.projects.push({name: $scope.createPjName});
-					getPj();
+					$scope.getPj();
 					$scope.alertMsg = {type: 'success', msg: '成功 : プロジェクトを追加しました'};
 				}).
 				error(function(err) {
@@ -73,7 +80,7 @@ angular.module('mtdApp')
 				function() {
 					pj.complete = !pj.complete;
 					$http.put('/api/projects/' + pj._id, pj ).success(function() {
-						getPj();
+						$scope.getPj();
 					});
 				}
 			);
