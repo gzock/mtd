@@ -40,7 +40,6 @@ angular.module('mtdApp')
 
 		$scope.uploadFile = function(event) {
 			$scope.file = event.target.files;
-			console.log("new file : " + $scope.file);
 			$scope.testClick();
 		}
 

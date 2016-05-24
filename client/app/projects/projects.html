@@ -55,13 +55,13 @@
   			<alert class="text-center" type="{{alertMsg.type}}" close="closeAlert($index)">{{alertMsg.msg}}</alert>
 			</div>
 
-			<form class="has-success input-group input-group-lg">
+			<form name="addPjForm" method="post" class="has-success input-group input-group-lg" novalidate>
 				<label class="input-group-addon">
 					<span class="glyphicon glyphicon-plus"></span>
 				</label>
-				<input type="text" class="form-control input-lg"  ng-model="createPjName" requierd>
+				<input name="addPjNameForm" type="text" class="form-control input-lg" ng-model="createPjName" ng-minlength="1" ng-maxlength="20" required>
 				<span class="input-group-btn del-btn">
-					<button class="btn btn-success" ng-click="createPj()">追加</button>
+					<button class="btn btn-success" ng-click="createPj()" ng-disabled="addPjForm.addPjNameForm.$invalid">追加</button>
 				</span>
 			</form>
 

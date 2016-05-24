@@ -170,7 +170,7 @@ exports.destroy = function(req, res) {
 							});
 					},
 					function(done) {
-						if(!target.type) {
+						if(!target.type && target.photo.bfr.total && target.photo.aft.total) {
 							family.getChildren(target._id, function(datas){
 								console.log("*** Finish ***");
 	

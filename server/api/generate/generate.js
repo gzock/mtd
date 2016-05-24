@@ -2,8 +2,10 @@ var fs = require('fs');
 var async = require('async');
 var archiver = require('archiver');
 var family = require('../target/family-seacher.js');
-var ZIP_PATH = '../../../zip/';
-var PHOTO_PATH = '../../..//photos/';
+//var ZIP_PATH = '../../../zip/';
+var ZIP_PATH = '/home/gzock/workspace/mtd/zip/';
+//var PHOTO_PATH = '../../../photos/';
+var PHOTO_PATH = '/home/gzock/workspace/mtd/photos/';
 
 function generate(pj, cb) {
 	var genZip = ZIP_PATH + pj.name + '_' + pj._id + '.zip';
@@ -34,8 +36,8 @@ function generate(pj, cb) {
 				return done();
 
 			}, function(err) {
-				archive.finalize();
 				if(err) { return cb(err); }
+				archive.finalize();
 
 				output.on('close', function() {
 					return cb(null, genZip);

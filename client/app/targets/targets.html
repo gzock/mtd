@@ -144,40 +144,40 @@
 				<hr>
 			</div>
 
-				<div class="col-xs-12" ng-show="addShowFlg">
-					<div class="col-xs-6">
-						<button type="button" class="btn btn-block" ng-model="type" btn-radio="'0'" ng-class="{'btn-primary': typeFlg}" ng-click="typeFlg = !typeFlg">
-							場所	
-						</button>
-					</div>
-					<div class="col-xs-6">
-						<button type="button" class="btn btn-block" ng-model="type" btn-radio="'1'" ng-class="{'btn-primary': !typeFlg}" ng-click="typeFlg = !typeFlg">
-							撮影対象
-						</button>
-					</div>
-				<hr>
+			<div class="col-xs-12" ng-show="addShowFlg">
+				<div class="col-xs-6">
+					<button type="button" class="btn btn-block" ng-model="type" btn-radio="'0'" ng-class="{'btn-primary': typeFlg}" ng-click="typeFlg = !typeFlg">
+						場所	
+					</button>
 				</div>
+				<div class="col-xs-6">
+					<button type="button" class="btn btn-block" ng-model="type" btn-radio="'1'" ng-class="{'btn-primary': !typeFlg}" ng-click="typeFlg = !typeFlg">
+						撮影対象
+					</button>
+				</div>
+			<hr>
+			</div>
 
-				<div class="col-xs-12" ng-show="addShowFlg">
-					<form class="has-success input-group input-group-lg">
-						<label class="input-group-addon">
-							<span class="glyphicon glyphicon-plus"></span>
-						</label>
-						<input type="text" class="form-control input-lg" ng-model="addTgtName" requierd>
-						<span class="input-group-btn del-btn">
-							<button class="btn btn-success" ng-click="addTgt()">追加</button>
-						</span>
-					</form>
-				</div>
+			<div ng-show="addShowFlg">
+				<form name="addTgtForm" class="has-success input-group input-group-lg" novalidate>
+					<label class="input-group-addon">
+						<span class="glyphicon glyphicon-plus"></span>
+					</label>
+					<input name="addTgtNameForm" type="text" class="form-control input-lg" ng-model="addTgtName" ng-minlength="1" ng-maxlength="20" required>
+					<span class="input-group-btn del-btn">
+						<button class="btn btn-success" ng-click="addTgt()" ng-disabled="addTgtForm.addTgtNameForm.$invalid">追加</button>
+					</span>
+				</form>
+			</div>
 
 			<div ng-show="editShowFlg">
-				<form class="has-warning input-group input-group-lg">
+				<form name="editTgtForm" class="has-warning input-group input-group-lg" novalidate>
 					<label class="input-group-addon">
 						<span class="glyphicon glyphicon-edit"></span>
 					</label>
-					<input type="text" class="form-control input-lg" ng-model="editTgtName" placeholder="{{selectedTgt.name}}" required>
+					<input name="editTgtNameForm" type="text" class="form-control input-lg" ng-model="editTgtName" placeholder="{{selectedTgt.name}}" ng-minlength="1" ng-maxlength="20" required>
 					<span class="input-group-btn del-btn">
-						<button class="btn btn-warning" ng-click="editTgt()">編集</button>
+						<button class="btn btn-warning" ng-click="editTgt()" ng-disabled="editTgtForm.editTgtNameForm.$invalid">編集</button>
 					</span>
 				</form>
 			</div>
