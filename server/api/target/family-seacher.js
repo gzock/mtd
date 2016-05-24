@@ -152,24 +152,23 @@ function getAllAdoptPhotos(id, cb) {
 		if(err) { return cb(err); }
 		var ret = [];
 		for(var i in array) {
-			//console.log(array[i]);
 			if(array[i].type == 0) { continue; }
-			if(!array[i].photo.bfr.adopt
-					|| !array[i].photo.aft.adopt) { 
-						return cb("Error : Adopt photo is not selected");
+			if(array[i].photo.bfr.shot) {
+				ret.push({
+									_id: array[i]._id,
+									name: array[i].name,
+									bfrAft: 0,
+									src: array[i].photo.bfr.adopt
+				});
 			}
-			ret.push({
-								_id: array[i]._id,
-								name: array[i].name,
-								bfrAft: 0,
-								src: array[i].photo.bfr.adopt
-			});
-			ret.push({
-								_id: array[i]._id,
-								name: array[i].name,
-								bfrAft: 1,
-								src: array[i].photo.aft.adopt
-			});
+			if(array[i].photo.aft.shot) { 
+				ret.push({
+									_id: array[i]._id,
+									name: array[i].name,
+									bfrAft: 1,
+									src: array[i].photo.aft.adopt
+				});
+			}
 		}
 		return cb(null, ret);
 	});
