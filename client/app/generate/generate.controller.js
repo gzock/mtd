@@ -49,7 +49,8 @@ angular.module('mtdApp')
 		$scope.generate = function() {
 			$scope.progress = true;
 			$scope.progressMsg = '生成中...';
-			$http.post('/api/generates/' + pj._id, {}, {responseType: 'blob'}).success(function(data) {
+			$http.post('/api/generates/' + pj._id, {}, {responseType: 'blob'})
+			.success(function(data) {
 				$scope.url =  $window.URL.createObjectURL(data);
 				// これで小数点第一位まで表示
 				$scope.fileSize = Math.round(data.size * 0.00001) / 10 + 'MB';
@@ -57,6 +58,9 @@ angular.module('mtdApp')
 				$scope.progress = false;
 				$scope.progressMsg = '完了';
 				$scope.downloadTitle = 'Download';
+			})
+			.error(function() {
+				$scope.message = "何らかの理由によりzipの生成に失敗しました。管理者に連絡して下さい。";
 			});
 		};
   });

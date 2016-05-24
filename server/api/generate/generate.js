@@ -22,18 +22,21 @@ function generate(pj, cb) {
 
 			async.forEach(names, function(name, done) {
 				cnt++;
-				archive.append(
-					fs.createReadStream(PHOTO_PATH + name.src),
-					{ name:
-									dir
-									+ convertNum(cnt, 5) + '_'
-									+ name.bfrAft + '_'
-									+ name.name + '_'
-									+ name._id
-									+ '.jpg'
-					}
-				);
-				return done();
+				fs.stat(PHOTO_PATH + name.src, function(err) {
+					if(err) { return done(err); }
+					archive.append(
+						fs.createReadStream(PHOTO_PATH + name.src),
+						{ name:
+										dir
+										+ convertNum(cnt, 5) + '_'
+										+ name.bfrAft + '_'
+										+ name.name + '_'
+										+ name._id
+										+ '.jpg'
+						}
+					);
+					return done();
+				});
 
 			}, function(err) {
 				if(err) { return cb(err); }
