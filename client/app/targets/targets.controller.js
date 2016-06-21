@@ -44,21 +44,28 @@ angular.module('mtdApp')
 		}
 
 		$scope.testClick = function() {
-			var fd = new FormData();
 
-			fd.append('file', $scope.file[0]);
-			$http.post('/api/targets/' + $scope.selectedTgt._id + '/photos/' + $scope.photoType,
-					fd, 
-					{	transformRequest: null,
-						headers: { 'Content-Type': undefined }
-					}
-			).success(function() {
-				$scope.refreshLocation();
-				setAlertMsg('success', '写真を追加しました');
+			var reader = new FileReader();
+			reader.onload = function(f) {
 
-			}).error(function(err) {
-				setAlertMsg('danger', err);
-			});
+				var fd = new FormData();
+				resizeImg(f.target.result, function(result) {
+					fd.append('file', result);
+					$http.post('/api/targets/' + $scope.selectedTgt._id + '/photos/' + $scope.photoType,
+							fd, 
+							{	transformRequest: null,
+								headers: { 'Content-Type': undefined }
+							}
+					).success(function() {
+						$scope.refreshLocation();
+						setAlertMsg('success', '写真を追加しました');
+
+					}).error(function(err) {
+						setAlertMsg('danger', err);
+					});
+				});
+			};
+			reader.readAsDataURL($scope.file[0]);
 		};
 
 /*
@@ -256,5 +263,43 @@ angular.module('mtdApp')
 													msg: msg
 												};
 		};
+
+		function resizeImg(image_data, cb){
+			var img = new Image();
+			img.src = image_data;
+			var canvas = document.createElement('canvas');
+			var new_size = 1280;
+
+			img.onload = function() {
+				var width = img0.width;
+				var height = img0.height;
+				var longer = (width >= height) ? width : height;
+
+				if(longer > new_size) {
+					width = parseFloat(new_size) / longer * width;
+			 		height = parseFloat(new_size) / longer * height;
+				}
+				canvas.width = parseInt(width);
+				canvas.height = parseInt(height);
+				var context = canvas.getContext("2d");
+				context.drawImage(img, 0, 0, width, height);
+
+				return cb(dataURL2Blob(canvas.toDataURL("image/jpeg")));
+			}
+			
+		};
+		function dataURL2Blob(dataurl, type) {
+		  var barr, bin, i, len, type = type || 'image/jpeg';
+		  bin = atob(dataurl.split("base64,")[1]);
+		  len = bin.length;
+		  barr = new Uint8Array(len);
+		  i = 0;
+		  while (i < len) {
+		    barr[i] = bin.charCodeAt(i);
+		    i++;
+		  }
+			return new Blob([barr]);
+		};
+
 
   });
